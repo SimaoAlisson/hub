@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hub com Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d0e7ff; /* azul claro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 5px;
+      color: #003366;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #003366;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(1.03);
+    }
+
+    .hub {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 40px 40px;
+    }
+
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 4fr));
+      gap: 15px;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .link-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: #003366;
+      transition: transform 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .link-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .link-button img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .link-button span {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tela de login -->
+  <div class="container" id="login-container">
+    <h2>Login</h2>
+    <div class="error" id="error-msg"></div>
+    <input type="text" id="username" placeholder="Usuário" />
+    <input type="password" id="password" placeholder="Senha" />
+    <button onclick="login()">Entrar</button>
+  </div>
+
+  <!-- Hub de links -->
+  <div class="hub" id="hub">
+    <h2>Bem-vindo ao Hub</h2>
+    <div class="button-container" id="button-container">
+      <!-- Botões inseridos via JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Lista de usuários e botões permitidos
+    const users = {
+      "admin": {
+        password: "1234",
+        buttons: [
+          {
+            text: "Lista de contatos",
+            url: "https://transrodonaves-my.sharepoint.com/:x:/r/personal/pesquisa_304_rte_com_br/_layouts/15/Doc.aspx?sourcedoc=%7BFB65CC38-2CCB-4136-BE78-923CAC503515%7D&file=Cadastro%20de%20Contatos%20Pesquisa%20304.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&ct=1743103929197&wdOrigin=OFFICECOM-WEB.MAIN.EDGEWORTH&cid=470c9106-6491-49d6-bacb-d54800189772&wdPreviousSessionSrc=HarmonyWeb&wdPreviousSession=863bb69c-6b71-4398-9be5-b1bb25b7f5d5",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/CnttList.png"
+          },
+          {
+            text: "Consulta Danfe",
+            url: "https://consultadanfe.com/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/danfe.png"
+          },
+          {
+            text: "CTes Pendentes",
+            url: "https://transrodonaves-my.sharepoint.com/:x:/g/personal/pesquisa_304_rte_com_br/EbIwYAEZem1LrW7nCV0h9UMBSQ0LQS7Uqbo8rzXOe0BqXg?e=aZzB2y",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Ctes.png"
+          },
+          {
+            text: "Digisac",
+            url: "https://rte304.digisac.chat/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/digsac.png"
+          },
+          {
+            text: "Super - Power BI",
+            url: "https://app.powerbi.com/groups/27313330-b5a0-44d9-927a-593521a17c63/reports/6feef8c6-a6d7-4e4c-aa29-415d5101890b/ReportSection?experience=power-bi",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/powerBI.png"
+          },
+          {
+            text: "Consulta prazo de entrega",
+            url: "https://waesteves2.github.io/prazo/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Prazo.png"
+          },
+          {
+            text: "Quem é Quem",
+            url: "https://apps.powerapps.com/play/e/default-837673c6-c676-4e08-addb-b3f0de9f2af9/a/8d0f6bf3-34e1-4684-bbfa-3dfcc85c7de2?tenantId=837673c6-c676-4e08-addb-b3f0de9f2af9&hint=16b878ca-fc3f-4976-8fd5-fc143dfdf550&source=sharebutton&sourcetime=1713983305855",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/quemequem.png"
+          },
+          {
+            text: "Sales Force",
+            url: "https://rodonaves.my.salesforce.com/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/salesforce.png"
+          },
+          {
+            text: "Qualis",
+            url: "https://qualis.hadrion.com.br/rodonaves/sistema/sca/sel_empresa_unidade.php",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Qualis.png"
+          },
+          {
+            text: "SSW",
+            url: "https://ssw.inf.br/2/rastreamento_danfe",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/SSW.png"
+          },
+          {
+            text: "BeSmart",
+            url: "https://bsptransportes.com.br/selecionaUnidade",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Bsmart.png"
+          },
+          {
+            text: "CSTI",
+            url: "https://csti.rte.com.br/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Csti.png"
+          },
+          {
+            text: "Gente Boa",
+            url: "https://genteboarodonaves.v2v.net/pt-BR",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/GenteBoa.png"
+          },
+          {
+            text: "Kombo",
+            url: "https://www.kombo.com.br/clientes/agapegp/sistema/index.php",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Agape.png"
+          },
+          {
+            text: "SIGA RTE",
+            url: "https://siga.rte.com.br/",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Siga.png"
+          },
+          {
+            text: "SYGMA",
+            url: "https://emissor.sygmasistemas.com.br/	",
+            img: "https://raw.githubusercontent.com/SimaoAlisson/imagens/refs/heads/main/Sygma.png"
+          }
+        ]
+      },
+    };
+
+const allUsers = ["faturamento", "financeiro", "comercial", "pesquisa", "emissão", "gerencia", "operação", "diretoria"];
+allUsers.forEach(user => {
+  users[user] = {
+    password: "1234", // você pode trocar as senhas se quiser
+    buttons: users["admin"].buttons
+  };
+});
+
+
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+
+      if (users[user] && users[user].password === pass) {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("hub").style.display = "flex";
+
+        // Gerar os botões
+        const container = document.getElementById("button-container");
+        users[user].buttons.forEach(btn => {
+          const a = document.createElement("a");
+          a.href = btn.url;
+          a.target = "_blank";
+          a.className = "link-button";
+          a.innerHTML = `
+            <img src="${btn.img}" alt="${btn.text}">
+            <span>${btn.text}</span>
+          `;
+          container.appendChild(a);
+        });
+      } else {
+        errorMsg.textContent = "Usuário ou senha inválidos!";
+      }
+    }
+  </script>
+</body>
+</html>
